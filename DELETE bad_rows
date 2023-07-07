@@ -1,0 +1,10 @@
+/* Delete duplicate posts */
+DELETE bad_rows.*
+from wp_posts as bad_rows
+inner join (
+select post_title, MIN(id) as min_id
+from wp_posts
+group by post_title
+having count(*) > 1
+) as good_rows on good_rows.post_title = bad_rows.post_title
+and good_rows.min_id <> bad_rows.id
